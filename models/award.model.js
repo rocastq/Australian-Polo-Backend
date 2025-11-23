@@ -1,8 +1,25 @@
 import pool from '../config/db.js';
 
-export const getAllAwards = async () => {
-  const [rows] = await pool.query('SELECT * FROM awards ORDER BY id DESC');
-  return rows;
+export const getAllAwards = async ({ limit = 10, offset = 0, search = '' }) => {
+  let query = 'SELECT * FROM awards';
+  let countQuery = 'SELECT COUNT(*) as total FROM awards';
+  const params = [];
+
+  if (search) {
+    query += ' WHERE title LIKE ?';
+    countQuery += ' WHERE title LIKE ?';
+    params.push(`%${search}%`);
+  }
+
+  query += ' ORDER BY id DESC LIMIT ? OFFSET ?';
+
+  const [items] = await pool.query(query, [...params, limit, offset]);
+  const [countResult] = await pool.query(countQuery, params);
+
+  return {
+    items,
+    total: countResult[0].total,
+  };
 };
 
 export const getAwardById = async (id) => {

@@ -1,8 +1,25 @@
 import pool from '../config/db.js';
 
-export const getAllTournaments = async () => {
-  const [rows] = await pool.query('SELECT * FROM tournaments ORDER BY id DESC');
-  return rows;
+export const getAllTournaments = async ({ limit = 10, offset = 0, search = '' }) => {
+  let query = 'SELECT * FROM tournaments';
+  let countQuery = 'SELECT COUNT(*) as total FROM tournaments';
+  const params = [];
+
+  if (search) {
+    query += ' WHERE name LIKE ? OR location LIKE ?';
+    countQuery += ' WHERE name LIKE ? OR location LIKE ?';
+    params.push(`%${search}%`, `%${search}%`);
+  }
+
+  query += ' ORDER BY id DESC LIMIT ? OFFSET ?';
+
+  const [tournaments] = await pool.query(query, [...params, limit, offset]);
+  const [countResult] = await pool.query(countQuery, params);
+
+  return {
+    tournaments,
+    total: countResult[0].total,
+  };
 };
 
 export const getTournamentById = async (id) => {

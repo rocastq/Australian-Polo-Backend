@@ -1,11 +1,25 @@
 import pool from '../config/db.js';
 
-export const getMatchesByTournament = async (tournamentId) => {
-  const [rows] = await pool.query(
-    'SELECT * FROM matches WHERE tournament_id = ? ORDER BY scheduled_time',
-    [tournamentId]
-  );
-  return rows;
+export const getAllMatches = async ({ limit = 10, offset = 0, tournamentId = null }) => {
+  let query = 'SELECT * FROM matches';
+  let countQuery = 'SELECT COUNT(*) as total FROM matches';
+  const params = [];
+
+  if (tournamentId) {
+    query += ' WHERE tournament_id = ?';
+    countQuery += ' WHERE tournament_id = ?';
+    params.push(tournamentId);
+  }
+
+  query += ' ORDER BY scheduled_time DESC LIMIT ? OFFSET ?';
+
+  const [matches] = await pool.query(query, [...params, limit, offset]);
+  const [countResult] = await pool.query(countQuery, params);
+
+  return {
+    matches,
+    total: countResult[0].total,
+  };
 };
 
 export const getMatchById = async (id) => {

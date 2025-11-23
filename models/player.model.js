@@ -1,8 +1,25 @@
 import pool from '../config/db.js';
 
-export const getAllPlayers = async () => {
-  const [rows] = await pool.query('SELECT * FROM players ORDER BY id DESC');
-  return rows;
+export const getAllPlayers = async ({ limit = 10, offset = 0, search = '' }) => {
+  let query = 'SELECT * FROM players';
+  let countQuery = 'SELECT COUNT(*) as total FROM players';
+  const params = [];
+
+  if (search) {
+    query += ' WHERE name LIKE ? OR position LIKE ?';
+    countQuery += ' WHERE name LIKE ? OR position LIKE ?';
+    params.push(`%${search}%`, `%${search}%`);
+  }
+
+  query += ' ORDER BY id DESC LIMIT ? OFFSET ?';
+
+  const [players] = await pool.query(query, [...params, limit, offset]);
+  const [countResult] = await pool.query(countQuery, params);
+
+  return {
+    players,
+    total: countResult[0].total,
+  };
 };
 
 export const getPlayerById = async (id) => {

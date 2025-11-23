@@ -7,8 +7,18 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+
+  // **Important for date handling**
+  dateStrings: ['DATE', 'DATETIME'],
+  timezone: 'Z',   // interpret as UTC
+
   waitForConnections: true,
   connectionLimit: 10,
+});
+
+pool.on('connection', (conn) => {
+  // Force session timezone to UTC
+  conn.query("SET time_zone = '+00:00';");
 });
 
 export default pool;

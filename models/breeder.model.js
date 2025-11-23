@@ -1,8 +1,25 @@
 import pool from '../config/db.js';
 
-export const getAllBreeders = async () => {
-  const [rows] = await pool.query('SELECT * FROM breeders ORDER BY id DESC');
-  return rows;
+export const getAllBreeders = async ({ limit = 10, offset = 0, search = '' }) => {
+  let query = 'SELECT * FROM breeders';
+  let countQuery = 'SELECT COUNT(*) as total FROM breeders';
+  const params = [];
+
+  if (search) {
+    query += ' WHERE name LIKE ?';
+    countQuery += ' WHERE name LIKE ?';
+    params.push(`%${search}%`);
+  }
+
+  query += ' ORDER BY id DESC LIMIT ? OFFSET ?';
+
+  const [items] = await pool.query(query, [...params, limit, offset]);
+  const [countResult] = await pool.query(countQuery, params);
+
+  return {
+    items,
+    total: countResult[0].total,
+  };
 };
 
 export const getBreederById = async (id) => {
