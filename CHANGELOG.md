@@ -317,12 +317,3 @@ New environment variables required in `.env`:
 
 ---
 
-## 👨‍💻 Contributors
-
-Enhanced by Claude Code with comprehensive production-ready features.
-
----
-
-## 📄 License
-
-[Your License Here]
