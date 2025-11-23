@@ -28,8 +28,8 @@ export const getHorse = asyncHandler(async (req, res) => {
 });
 
 export const createHorse = asyncHandler(async (req, res) => {
-  const { name, pedigree, breeder_id } = req.body;
-  const horse = await Horse.createHorse({ name, pedigree, breeder_id });
+  const { name, pedigree, breeder_id, owner, tamer } = req.body;
+  const horse = await Horse.createHorse({ name, pedigree, breeder_id, owner, tamer });
   res.status(201).json(horse);
 });
 
@@ -37,8 +37,8 @@ export const updateHorse = asyncHandler(async (req, res) => {
   const existing = await Horse.getHorseById(req.params.id);
   if (!existing) throw new AppError('Horse not found', 404);
 
-  const { name, pedigree, breeder_id } = req.body;
-  const horse = await Horse.updateHorse(req.params.id, { name, pedigree, breeder_id });
+  const { name, pedigree, breeder_id, owner, tamer } = req.body;
+  const horse = await Horse.updateHorse(req.params.id, { name, pedigree, breeder_id, owner, tamer });
   res.json(horse);
 });
 

@@ -15,6 +15,16 @@ export const createHorseValidator = [
     .optional({ nullable: true })
     .isInt()
     .withMessage('Breeder ID must be an integer'),
+  body('owner')
+    .optional({ nullable: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Owner name must not exceed 100 characters'),
+  body('tamer')
+    .optional({ nullable: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Tamer name must not exceed 100 characters'),
 ];
 
 export const updateHorseValidator = [

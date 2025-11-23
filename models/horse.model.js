@@ -44,20 +44,20 @@ export const getHorseById = async (id) => {
   return rows[0];
 };
 
-export const createHorse = async ({ name, pedigree, breeder_id }) => {
+export const createHorse = async ({ name, pedigree, breeder_id, owner, tamer }) => {
   const [res] = await pool.query(
-    'INSERT INTO horses (name, pedigree, breeder_id) VALUES (?, ?, ?)',
-    [name, JSON.stringify(pedigree), breeder_id]
+    'INSERT INTO horses (name, pedigree, breeder_id, owner, tamer) VALUES (?, ?, ?, ?, ?)',
+    [name, JSON.stringify(pedigree), breeder_id, owner, tamer]
   );
-  return { id: res.insertId, name, pedigree, breeder_id };
+  return { id: res.insertId, name, pedigree, breeder_id, owner, tamer };
 };
 
-export const updateHorse = async (id, { name, pedigree, breeder_id }) => {
+export const updateHorse = async (id, { name, pedigree, breeder_id, owner, tamer }) => {
   await pool.query(
-    'UPDATE horses SET name = ?, pedigree = ?, breeder_id = ? WHERE id = ?',
-    [name, JSON.stringify(pedigree), breeder_id, id]
+    'UPDATE horses SET name = ?, pedigree = ?, breeder_id = ?, owner = ?, tamer = ? WHERE id = ?',
+    [name, JSON.stringify(pedigree), breeder_id, owner, tamer, id]
   );
-  return { id, name, pedigree, breeder_id };
+  return { id, name, pedigree, breeder_id, owner, tamer };
 };
 
 export const deleteHorse = async (id) => {
