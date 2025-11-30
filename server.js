@@ -20,6 +20,9 @@ import horseRoutes from './routes/horse.routes.js';
 import breederRoutes from './routes/breeder.routes.js';
 import awardRoutes from './routes/award.routes.js';
 import rosterRoutes from './routes/rosters.routes.js';
+import clubRoutes from './routes/club.routes.js';
+import fieldRoutes from './routes/field.routes.js';
+import dutyRoutes from './routes/duty.routes.js';
 
 validateEnv();
 
@@ -72,6 +75,9 @@ app.use('/api/horses', horseRoutes);
 app.use('/api/breeders', breederRoutes);
 app.use('/api/awards', awardRoutes);
 app.use('/api/rosters', rosterRoutes);
+app.use('/api/clubs', clubRoutes);
+app.use('/api/fields', fieldRoutes);
+app.use('/api/duties', dutyRoutes);
 
 // 404 handler
 app.use(notFoundHandler);
