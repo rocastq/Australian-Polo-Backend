@@ -3,7 +3,7 @@ import pool from '../config/db.js';
 export const getAllDuties = async ({ limit = 10, offset = 0, search = '' }) => {
   let query = `
     SELECT d.*,
-           p.name as player_name,
+           CONCAT(p.first_name, ' ', p.surname) as player_name,
            m.scheduled_time as match_time
     FROM duties d
     LEFT JOIN players p ON d.player_id = p.id
@@ -13,9 +13,9 @@ export const getAllDuties = async ({ limit = 10, offset = 0, search = '' }) => {
   const params = [];
 
   if (search) {
-    query += ' WHERE (d.type LIKE ? OR d.notes LIKE ? OR p.name LIKE ?)';
-    countQuery += ' LEFT JOIN players p ON d.player_id = p.id WHERE (d.type LIKE ? OR d.notes LIKE ? OR p.name LIKE ?)';
-    params.push(`%${search}%`, `%${search}%`, `%${search}%`);
+    query += ' WHERE (d.type LIKE ? OR d.notes LIKE ? OR p.first_name LIKE ? OR p.surname LIKE ?)';
+    countQuery += ' LEFT JOIN players p ON d.player_id = p.id WHERE (d.type LIKE ? OR d.notes LIKE ? OR p.first_name LIKE ? OR p.surname LIKE ?)';
+    params.push(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
   }
 
   query += ' ORDER BY d.date DESC LIMIT ? OFFSET ?';

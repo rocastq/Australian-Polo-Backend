@@ -27,6 +27,7 @@ const router = Router();
  *         name: search
  *         schema:
  *           type: string
+ *         description: Search by first_name, surname, or state
  *     responses:
  *       200:
  *         description: List of players
@@ -68,15 +69,40 @@ router.get('/:id', idValidator, validate, getPlayer);
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - first_name
+ *               - surname
  *             properties:
- *               name:
+ *               first_name:
  *                 type: string
+ *                 maxLength: 100
+ *               surname:
+ *                 type: string
+ *                 maxLength: 100
+ *               state:
+ *                 type: string
+ *                 enum: [NSW, VIC, QLD, SA, WA]
+ *                 nullable: true
+ *               handicap_jun_2025:
+ *                 type: integer
+ *                 nullable: true
+ *               womens_handicap_jun_2025:
+ *                 type: integer
+ *                 nullable: true
+ *               handicap_dec_2026:
+ *                 type: integer
+ *                 nullable: true
+ *               womens_handicap_dec_2026:
+ *                 type: integer
+ *                 nullable: true
  *               team_id:
  *                 type: integer
  *                 nullable: true
  *               position:
  *                 type: string
+ *                 maxLength: 50
+ *                 nullable: true
+ *               club_id:
+ *                 type: integer
  *                 nullable: true
  *     responses:
  *       201:
@@ -103,6 +129,42 @@ router.post('/', createPlayerValidator, validate, createPlayer);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - first_name
+ *               - surname
+ *             properties:
+ *               first_name:
+ *                 type: string
+ *                 maxLength: 100
+ *               surname:
+ *                 type: string
+ *                 maxLength: 100
+ *               state:
+ *                 type: string
+ *                 enum: [NSW, VIC, QLD, SA, WA]
+ *                 nullable: true
+ *               handicap_jun_2025:
+ *                 type: integer
+ *                 nullable: true
+ *               womens_handicap_jun_2025:
+ *                 type: integer
+ *                 nullable: true
+ *               handicap_dec_2026:
+ *                 type: integer
+ *                 nullable: true
+ *               womens_handicap_dec_2026:
+ *                 type: integer
+ *                 nullable: true
+ *               team_id:
+ *                 type: integer
+ *                 nullable: true
+ *               position:
+ *                 type: string
+ *                 maxLength: 50
+ *                 nullable: true
+ *               club_id:
+ *                 type: integer
+ *                 nullable: true
  *     responses:
  *       200:
  *         description: Player updated

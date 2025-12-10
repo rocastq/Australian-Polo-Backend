@@ -6,12 +6,12 @@ export const getAllPlayers = async ({ limit = 10, offset = 0, search = '' }) => 
   const params = [];
 
   if (search) {
-    query += ' WHERE name LIKE ? OR position LIKE ?';
-    countQuery += ' WHERE name LIKE ? OR position LIKE ?';
-    params.push(`%${search}%`, `%${search}%`);
+    query += ' WHERE first_name LIKE ? OR surname LIKE ? OR state LIKE ?';
+    countQuery += ' WHERE first_name LIKE ? OR surname LIKE ? OR state LIKE ?';
+    params.push(`%${search}%`, `%${search}%`, `%${search}%`);
   }
 
-  query += ' ORDER BY id DESC LIMIT ? OFFSET ?';
+  query += ' ORDER BY surname ASC, first_name ASC LIMIT ? OFFSET ?';
 
   const [players] = await pool.query(query, [...params, limit, offset]);
   const [countResult] = await pool.query(countQuery, params);
@@ -27,20 +27,87 @@ export const getPlayerById = async (id) => {
   return rows[0];
 };
 
-export const createPlayer = async ({ name, team_id, position }) => {
+export const createPlayer = async ({
+  first_name,
+  surname,
+  state,
+  handicap_jun_2025,
+  womens_handicap_jun_2025,
+  handicap_dec_2026,
+  womens_handicap_dec_2026,
+  team_id,
+  position,
+  club_id
+}) => {
   const [res] = await pool.query(
-    'INSERT INTO players (name, team_id, position) VALUES (?, ?, ?)',
-    [name, team_id, position]
+    `INSERT INTO players (
+      first_name, surname, state,
+      handicap_jun_2025, womens_handicap_jun_2025,
+      handicap_dec_2026, womens_handicap_dec_2026,
+      team_id, position, club_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      first_name, surname, state,
+      handicap_jun_2025, womens_handicap_jun_2025,
+      handicap_dec_2026, womens_handicap_dec_2026,
+      team_id, position, club_id
+    ]
   );
-  return { id: res.insertId, name, team_id, position };
+  return {
+    id: res.insertId,
+    first_name,
+    surname,
+    state,
+    handicap_jun_2025,
+    womens_handicap_jun_2025,
+    handicap_dec_2026,
+    womens_handicap_dec_2026,
+    team_id,
+    position,
+    club_id
+  };
 };
 
-export const updatePlayer = async (id, { name, team_id, position }) => {
+export const updatePlayer = async (id, {
+  first_name,
+  surname,
+  state,
+  handicap_jun_2025,
+  womens_handicap_jun_2025,
+  handicap_dec_2026,
+  womens_handicap_dec_2026,
+  team_id,
+  position,
+  club_id
+}) => {
   await pool.query(
-    'UPDATE players SET name = ?, team_id = ?, position = ? WHERE id = ?',
-    [name, team_id, position, id]
+    `UPDATE players SET
+      first_name = ?, surname = ?, state = ?,
+      handicap_jun_2025 = ?, womens_handicap_jun_2025 = ?,
+      handicap_dec_2026 = ?, womens_handicap_dec_2026 = ?,
+      team_id = ?, position = ?, club_id = ?
+    WHERE id = ?`,
+    [
+      first_name, surname, state,
+      handicap_jun_2025, womens_handicap_jun_2025,
+      handicap_dec_2026, womens_handicap_dec_2026,
+      team_id, position, club_id,
+      id
+    ]
   );
-  return { id, name, team_id, position };
+  return {
+    id,
+    first_name,
+    surname,
+    state,
+    handicap_jun_2025,
+    womens_handicap_jun_2025,
+    handicap_dec_2026,
+    womens_handicap_dec_2026,
+    team_id,
+    position,
+    club_id
+  };
 };
 
 export const deletePlayer = async (id) => {

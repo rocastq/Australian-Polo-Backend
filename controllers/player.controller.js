@@ -28,8 +28,31 @@ export const getPlayer = asyncHandler(async (req, res) => {
 });
 
 export const createPlayer = asyncHandler(async (req, res) => {
-  const { name, team_id, position } = req.body;
-  const player = await Player.createPlayer({ name, team_id, position });
+  const {
+    first_name,
+    surname,
+    state,
+    handicap_jun_2025,
+    womens_handicap_jun_2025,
+    handicap_dec_2026,
+    womens_handicap_dec_2026,
+    team_id,
+    position,
+    club_id
+  } = req.body;
+
+  const player = await Player.createPlayer({
+    first_name,
+    surname,
+    state,
+    handicap_jun_2025,
+    womens_handicap_jun_2025,
+    handicap_dec_2026,
+    womens_handicap_dec_2026,
+    team_id,
+    position,
+    club_id
+  });
   res.status(201).json(player);
 });
 
@@ -37,8 +60,31 @@ export const updatePlayer = asyncHandler(async (req, res) => {
   const existing = await Player.getPlayerById(req.params.id);
   if (!existing) throw new AppError('Player not found', 404);
 
-  const { name, team_id, position } = req.body;
-  const player = await Player.updatePlayer(req.params.id, { name, team_id, position });
+  const {
+    first_name,
+    surname,
+    state,
+    handicap_jun_2025,
+    womens_handicap_jun_2025,
+    handicap_dec_2026,
+    womens_handicap_dec_2026,
+    team_id,
+    position,
+    club_id
+  } = req.body;
+
+  const player = await Player.updatePlayer(req.params.id, {
+    first_name,
+    surname,
+    state,
+    handicap_jun_2025,
+    womens_handicap_jun_2025,
+    handicap_dec_2026,
+    womens_handicap_dec_2026,
+    team_id,
+    position,
+    club_id
+  });
   res.json(player);
 });
 
